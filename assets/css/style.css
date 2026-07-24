@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Montserrat:wght@700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0d1117;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 380px;
+    background: #1a1e29;
+    border-radius: 24px;
+    padding: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Área del Canvas */
+.canvas-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 18px;
+}
+
+/* UI Inferior Estilo Imagen */
+.bottom-ui {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.attempts-badge {
+    background: #000;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-family: 'Teko', sans-serif;
+    letter-spacing: 1px;
+    align-self: flex-start;
+}
+
+.btn-attempt-over {
+    background: linear-gradient(180deg, #e53935, #c62828);
+    color: #ffffff;
+    border: 2px solid #ff7961;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(229, 57, 53, 0.4);
+    cursor: pointer;
+}
+
+.btn-attempt-over h3 {
+    font-family: 'Teko', sans-serif;
+    font-size: 1.4rem;
+    line-height: 1;
+    letter-spacing: 1px;
+}
+
+.btn-attempt-over p {
+    font-size: 0.65rem;
+    opacity: 0.9;
+    font-weight: 700;
+}
+
+/* Tablero Inferior de Puntuación */
+.stats-panel {
+    background: #121620;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    border: 1px solid #2a3042;
+}
+
+.leaderboard-info h4 {
+    color: #4dd0e1;
+    font-size: 0.8rem;
+    margin-bottom: 2px;
+}
+
+.leaderboard-info p {
+    color: #a6b4c9;
+    font-size: 0.7rem;
+}
+
+.leaderboard-info .highlight {
+    color: #ffb74d;
+    font-weight: bold;
+}
+
+.score-info {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.score-info .high-score {
+    color: #00e676;
+    font-weight: bold;
+}
+
+.score-info .main-score {
+    font-family: 'Teko', sans-serif;
+    font-size: 1.6rem;
+    color: #fff;
+    line-height: 1;
+}

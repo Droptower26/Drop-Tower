@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Drop</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- Pantalla del Juego (Canvas) -->
+        <main class="canvas-wrapper">
+            <canvas id="gameCanvas" width="360" height="480"></canvas>
+        </main>
+
+        <!-- UI Inferior -->
+        <footer class="bottom-ui">
+            <div class="attempts-badge">
+                DAILY ATTEMPTS: <span id="attempts-count">3/3</span>
+            </div>
+
+            <div class="btn-attempt-over" id="btn-pay">
+                <h3>ATTEMPT OVER</h3>
+                <p>PAY $10 MXN FOR 3 MORE ATTEMPTS</p>
+            </div>
+
+            <div class="stats-panel">
+                <div class="leaderboard-info">
+                    <h4>LEADERBOARD</h4>
+                    <p class="highlight">RANK #43 - TU (ANGEL)</p>
+                    <p>RANK #1 - @MAX98 (192 BLOCKS)</p>
+                    <p>RANK #2 - @RETRO_HUNTER (185 BLOCKS)</p>
+                </div>
+                <div class="score-info">
+                    <span class="high-score">HIGHSCORE: 147</span>
+                    <span class="main-score">SCORE: <span id="current-score">0</span></span>
+<small style="color: #ffc107;">BEST: 112</small>                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/game.js"></script>
+</body>
+</html>
