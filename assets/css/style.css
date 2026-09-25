@@ -62,28 +62,58 @@ body {
     align-self: flex-start;
 }
 
-.btn-attempt-over {
-    background: linear-gradient(180deg, #e53935, #c62828);
-    color: #ffffff;
-    border: 2px solid #ff7961;
+.record-challenge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 224, 130, 0.35);
     border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(229, 57, 53, 0.4);
-    cursor: pointer;
+    background: linear-gradient(105deg, rgba(67, 52, 24, 0.95), rgba(29, 38, 47, 0.98));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 18px rgba(255, 193, 7, 0.12);
 }
 
-.btn-attempt-over h3 {
+.record-challenge strong {
+    display: block;
+    color: #fff8df;
     font-family: 'Teko', sans-serif;
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     line-height: 1;
     letter-spacing: 1px;
 }
 
-.btn-attempt-over p {
-    font-size: 0.65rem;
-    opacity: 0.9;
+.challenge-eyebrow {
+    display: block;
+    color: #ffe082;
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    margin-bottom: 3px;
+}
+
+.challenge-target {
+    text-align: right;
+}
+
+.challenge-target span {
+    display: block;
+    color: #ffe082;
+    font-family: 'Teko', sans-serif;
+    font-size: 1.45rem;
+    line-height: 1;
     font-weight: 700;
+}
+
+.challenge-target small {
+    display: block;
+    max-width: 145px;
+    overflow: hidden;
+    color: #d7e3f4;
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* Tablero Inferior de Puntuación */
@@ -97,20 +127,89 @@ body {
     border: 1px solid #2a3042;
 }
 
+.leaderboard-info {
+    background: linear-gradient(135deg, rgba(16, 24, 38, 0.92), rgba(17, 48, 50, 0.9));
+    border: 1px solid rgba(105, 240, 174, 0.28);
+    border-radius: 12px;
+    padding: 8px 10px;
+    min-width: 124px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 0 16px rgba(41, 170, 119, 0.18);
+}
+
 .leaderboard-info h4 {
-    color: #4dd0e1;
+    color: #69f0ae;
     font-size: 0.8rem;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(105, 240, 174, 0.28);
 }
 
 .leaderboard-info p {
-    color: #a6b4c9;
-    font-size: 0.7rem;
+    color: #cbd5e1;
+    font-size: 0.68rem;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.leaderboard-info #record-player {
+    color: #f8fafc;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px;
+}
+
+.leaderboard-info #record-blocks {
+    color: #69f0ae;
+    font-size: 0.62rem;
 }
 
 .leaderboard-info .highlight {
-    color: #ffb74d;
-    font-weight: bold;
+    color: #ffe082;
+    font-weight: 800;
+    text-shadow: 0 0 12px rgba(255, 224, 130, 0.4);
+}
+
+.record-status {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    letter-spacing: 0.7px;
+    font-weight: 700;
+    color: #d7e3f4;
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    transition: all 0.2s ease;
+}
+
+.record-status.record-live {
+    color: #9af7c0;
+    background: rgba(40, 167, 69, 0.12);
+    border-color: rgba(105, 240, 174, 0.35);
+    box-shadow: 0 0 10px rgba(105, 240, 174, 0.18);
+}
+
+.record-status.record-broken {
+    color: #ffe082;
+    background: rgba(255, 193, 7, 0.12);
+    border-color: rgba(255, 193, 7, 0.4);
+    box-shadow: 0 0 14px rgba(255, 193, 7, 0.2);
+    animation: recordPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes recordPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.03);
+        filter: brightness(1.18);
+    }
 }
 
 .score-info {
@@ -118,16 +217,181 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 2px;
 }
 
 .score-info .high-score {
     color: #00e676;
     font-weight: bold;
+    font-size: 0.72rem;
 }
 
 .score-info .main-score {
     font-family: 'Teko', sans-serif;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     color: #fff;
     line-height: 1;
+}
+
+.blocks-live {
+    color: #69f0ae;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+#best-score-label {
+    margin-top: 2px;
+    font-size: 0.72rem;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(4px);
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-card {
+    background: #1e293b;
+    border: 3px solid #69f0ae;
+    border-radius: 16px;
+    padding: 24px;
+    width: 280px;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.modal-card h2 {
+    margin: 0 0 8px 0;
+    color: #ff5252;
+    font-size: 20px;
+}
+
+.modal-subtitle {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 16px;
+}
+
+.record-form {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 224, 130, 0.35);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 14px;
+    text-align: left;
+}
+
+.record-form.hidden {
+    display: none;
+}
+
+.record-form-title {
+    display: block;
+    color: #ffe082;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.record-form label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.record-form input {
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid #475569;
+    border-radius: 7px;
+    padding: 9px 10px;
+    margin-bottom: 9px;
+    background: #111827;
+    color: #ffffff;
+    font: inherit;
+    outline: none;
+}
+
+.record-form input:focus {
+    border-color: #ffe082;
+    box-shadow: 0 0 0 2px rgba(255, 224, 130, 0.15);
+}
+
+.score-display,
+.blocks-display {
+    background: #0f172a;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 1px solid #334155;
+}
+
+.score-label {
+    display: block;
+    font-size: 12px;
+    color: #cbd5e1;
+    letter-spacing: 1px;
+}
+
+.score-number,
+.blocks-number {
+    display: block;
+    font-size: 42px;
+    font-weight: 900;
+    margin: 6px 0;
+}
+
+.score-number {
+    color: #ffea00;
+}
+
+.blocks-number {
+    color: #69f0ae;
+    font-size: 36px;
+}
+
+.blocks-label {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.btn-primary {
+    background: #69f0ae;
+    color: #0f172a;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.1s ease, background 0.2s;
+}
+
+.record-form .btn-primary {
+    padding: 10px 12px;
+    font-size: 12px;
+}
+
+.btn-primary:active {
+    transform: scale(0.96);
+    background: #00e676;
 }
