@@ -834,7 +834,10 @@ function drawBackground() {
     let skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     let heightLevel = stack.length;
 
-    if (isSlowMotion) {
+    if (isLowPowerDevice && !isSlowMotion) {
+        skyGradient.addColorStop(0, heightLevel < 100 ? '#80d8ff' : '#3f51b5');
+        skyGradient.addColorStop(1, heightLevel < 100 ? '#ffcc80' : '#121433');
+    } else if (isSlowMotion) {
         skyGradient.addColorStop(0, '#fff59d');
         skyGradient.addColorStop(1, '#ffb74d');
     } else if (heightLevel < 100) {
@@ -854,7 +857,7 @@ function drawBackground() {
     ctx.fillStyle = skyGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (heightLevel < 300) {
+    if (heightLevel < 300 && !isLowPowerDevice) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
         clouds.forEach(cloud => {
             let drawY = cloud.y + (cameraOffsetY * 0.3);
@@ -877,10 +880,12 @@ function drawBackground() {
             ctx.fillStyle = 'rgba(38, 50, 56, 0.5)';
             ctx.fillRect(b.x, bY, b.width, b.height);
 
-            b.windows.forEach(w => {
-                ctx.fillStyle = w.lit ? 'rgba(255, 235, 59, 0.7)' : 'rgba(20, 25, 30, 0.5)';
-                ctx.fillRect(b.x + w.x, bY + w.y, 8, 12);
-            });
+            if (!isLowPowerDevice) {
+                b.windows.forEach(w => {
+                    ctx.fillStyle = w.lit ? 'rgba(255, 235, 59, 0.7)' : 'rgba(20, 25, 30, 0.5)';
+                    ctx.fillRect(b.x + w.x, bY + w.y, 8, 12);
+                });
+            }
         });
         ctx.restore();
     }
@@ -1311,6 +1316,7 @@ function drawGame() {
     if (!isDemolishing) {
         stack.forEach((b, idx) => {
             let drawY = b.y + cameraOffsetY;
+            if (drawY < -CUBE_SIZE || drawY > canvas.height) return;
             let isTop = (idx === stack.length - 1);
             drawStyledBlock(b.x, drawY, BLOCK_COLORS[b.colorIndex % BLOCK_COLORS.length], b.isClock, isTop);
         });
