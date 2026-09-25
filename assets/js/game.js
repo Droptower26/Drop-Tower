@@ -4,6 +4,26 @@
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const gameOverModal = document.getElementById('game-over-modal');
+const finalScoreEl = document.getElementById('final-score');
+const finalBlocksEl = document.getElementById('final-blocks');
+const retryButton = document.getElementById('retry-button');
+const currentScoreEl = document.getElementById('current-score');
+const currentBlocksEl = document.getElementById('current-blocks');
+const highScoreEl = document.querySelector('.high-score');
+const bestScoreLabelEl = document.getElementById('best-score-label');
+const recordCurrentEl = document.getElementById('record-current');
+const recordPlayerEl = document.getElementById('record-player');
+const recordBlocksEl = document.getElementById('record-blocks');
+const recordStatusEl = document.getElementById('record-status');
+const challengeScoreEl = document.getElementById('challenge-score');
+const challengeDetailsEl = document.getElementById('challenge-details');
+const recordForm = document.getElementById('record-form');
+const playerIdInput = document.getElementById('player-id');
+const saveRecordButton = document.getElementById('save-record-button');
+const BEST_SCORE_STORAGE_KEY = 'tower_drop_best_v2';
+const BEST_PLAYER_STORAGE_KEY = 'tower_drop_best_player_v2';
+const BEST_BLOCKS_STORAGE_KEY = 'tower_drop_best_blocks_v2';
 
 const CUBE_SIZE = 42; 
 const CRANE_Y = 85; 
@@ -23,7 +43,10 @@ let isDropping = false;
 // Puntuación, Bloques y Racha
 let score = 0;
 let blockCount = 0;
-let bestScore = localStorage.getItem('tower_drop_best') || 0;
+let bestScore = Number(localStorage.getItem(BEST_SCORE_STORAGE_KEY)) || 0;
+let bestPlayer = localStorage.getItem(BEST_PLAYER_STORAGE_KEY) || 'SIN JUGADOR';
+let bestBlocks = Number(localStorage.getItem(BEST_BLOCKS_STORAGE_KEY)) || 0;
+let recordWasBroken = false;
 let streak = 0;
 
 // Efecto de Temblor (Screen Shake)
@@ -49,6 +72,7 @@ let spawnFlyerTimer = 0;
 
 // Estado de Demolición (Game Over)
 let isDemolishing = false;
+let isGameOver = false;
 let demolishingBlocks = [];
 
 // Power-Up Tiempo Lento
@@ -547,10 +571,78 @@ function generateMoreBeamsIfNeeded() {
 }
 
 function updateUI() {
+    const previousBest = Number(bestScore);
+    const isNewRecord = score > previousBest && score > 0;
+
     if (score > bestScore) {
         bestScore = score;
-        localStorage.setItem('tower_drop_best', bestScore);
+        bestBlocks = blockCount;
+        localStorage.setItem(BEST_SCORE_STORAGE_KEY, String(bestScore));
+        localStorage.setItem(BEST_BLOCKS_STORAGE_KEY, String(bestBlocks));
+        recordWasBroken = true;
     }
+
+    if (currentScoreEl) {
+        currentScoreEl.textContent = score;
+    }
+
+    if (currentBlocksEl) {
+        currentBlocksEl.textContent = blockCount;
+    }
+
+    if (highScoreEl) {
+        highScoreEl.textContent = 'HIGHSCORE: ' + bestScore;
+    }
+
+    if (bestScoreLabelEl) {
+        bestScoreLabelEl.textContent = 'BEST: ' + bestScore;
+    }
+
+    if (recordCurrentEl) {
+        recordCurrentEl.textContent = bestScore + ' PTS';
+    }
+
+    if (recordPlayerEl) {
+        recordPlayerEl.textContent = 'ID: ' + bestPlayer;
+    }
+
+    if (recordBlocksEl) {
+        recordBlocksEl.textContent = bestBlocks + ' BLOQUES';
+    }
+
+    if (challengeScoreEl) {
+        challengeScoreEl.textContent = bestScore + ' PTS';
+    }
+
+    if (challengeDetailsEl) {
+        challengeDetailsEl.textContent = bestPlayer + ' · ' + bestBlocks + ' BLOQUES';
+    }
+
+    if (recordStatusEl) {
+        recordStatusEl.textContent = isNewRecord ? '¡RECORD NUEVO!' : (bestScore > 0 ? 'EN VIVO' : 'Aún no hay marca');
+        recordStatusEl.classList.toggle('record-live', bestScore > 0 && !isNewRecord);
+        recordStatusEl.classList.toggle('record-broken', isNewRecord);
+    }
+}
+
+function showGameOverModal() {
+    if (!gameOverModal || !finalScoreEl || !finalBlocksEl) return;
+    finalScoreEl.textContent = score;
+    finalBlocksEl.textContent = blockCount;
+    if (recordForm) {
+        recordForm.classList.toggle('hidden', !recordWasBroken);
+    }
+    gameOverModal.classList.remove('hidden');
+
+    if (recordWasBroken && playerIdInput) {
+        playerIdInput.value = '';
+        window.setTimeout(() => playerIdInput.focus(), 0);
+    }
+}
+
+function hideGameOverModal() {
+    if (!gameOverModal) return;
+    gameOverModal.classList.add('hidden');
 }
 
 function initBase() {
@@ -573,6 +665,7 @@ function initBase() {
     score = 0;
     blockCount = 0;
     streak = 0;
+    recordWasBroken = false;
     baseSpeed = INITIAL_SPEED;
     currentSpeed = INITIAL_SPEED;
     cameraOffsetY = 0;
@@ -587,7 +680,9 @@ function initBase() {
     isSlowMotion = false;
     isSpecialClockCube = false;
     isDemolishing = false;
+    isGameOver = false;
     demolishingBlocks = [];
+    hideGameOverModal();
 
     if (isAudioInitialized) {
         playBgMusic();
@@ -1058,7 +1153,10 @@ function updateDemolition() {
     });
 
     if (allOffScreen && demolishingBlocks.length > 0) {
-        initBase();
+        isDemolishing = false;
+        isGameOver = true;
+        demolishingBlocks = [];
+        showGameOverModal();
     }
 }
 
@@ -1068,7 +1166,7 @@ function updateDemolition() {
 
 function triggerDrop() {
     initAudio();
-    if (isDropping || isDemolishing) return;
+    if (isGameOver || isDropping || isDemolishing) return;
     
     isDropping = true;
     dropVy = 0;
@@ -1089,7 +1187,7 @@ function activateSlowMotion() {
 }
 
 function updateLogic() {
-    if (isDemolishing) return;
+    if (isGameOver || isDemolishing) return;
 
     cameraOffsetY += (targetCameraOffsetY - cameraOffsetY) * 0.1;
 
@@ -1236,11 +1334,13 @@ function gameLoop() {
 window.addEventListener('keydown', (e) => {
     if (e.code === 'Space') {
         e.preventDefault();
-        triggerDrop();
+        if (!isGameOver) triggerDrop();
     }
 });
 
 canvas.addEventListener('pointerdown', (e) => {
+    if (isGameOver) return;
+
     let rect = canvas.getBoundingClientRect();
     let clickX = e.clientX - rect.left;
     let clickY = e.clientY - rect.top;
@@ -1258,6 +1358,23 @@ canvas.addEventListener('pointerdown', (e) => {
     e.preventDefault();
     triggerDrop();
 });
+
+if (retryButton) {
+    retryButton.addEventListener('click', () => {
+        hideGameOverModal();
+        initBase();
+    });
+}
+
+if (saveRecordButton) {
+    saveRecordButton.addEventListener('click', () => {
+        const playerId = playerIdInput ? playerIdInput.value.trim().slice(0, 18) : '';
+        bestPlayer = playerId || 'SIN JUGADOR';
+        localStorage.setItem(BEST_PLAYER_STORAGE_KEY, bestPlayer);
+        updateUI();
+        if (recordForm) recordForm.classList.add('hidden');
+    });
+}
 
 // Inicializar Juego
 initBase();
