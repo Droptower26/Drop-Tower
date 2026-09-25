@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Drop</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- Pantalla del Juego (Canvas) -->
+        <main class="canvas-wrapper">
+            <canvas id="gameCanvas" width="360" height="480"></canvas>
+        </main>
+
+        <!-- UI Inferior -->
+        <footer class="bottom-ui">
+            <div class="attempts-badge">
+                DAILY ATTEMPTS: <span id="attempts-count">3/3</span>
+            </div>
+
+            <div class="record-challenge">
+                <div>
+                    <span class="challenge-eyebrow">RETO ACTIVO</span>
+                    <strong>ROMPE EL RECORD</strong>
+                </div>
+                <div class="challenge-target">
+                    <span id="challenge-score">0 PTS</span>
+                    <small id="challenge-details">SIN JUGADOR · 0 BLOQUES</small>
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <div class="leaderboard-info">
+                    <h4>RECORD</h4>
+                    <p id="record-current" class="highlight">0 PTS</p>
+                    <p id="record-player">ID: SIN JUGADOR</p>
+                    <p id="record-blocks">0 BLOQUES</p>
+                    <p id="record-status" class="record-status">Aún no hay marca</p>
+                </div>
+                <div class="score-info">
+                    <span class="high-score">HIGHSCORE: 0</span>
+                    <span class="main-score">SCORE: <span id="current-score">0</span></span>
+                    <span class="blocks-live">BLOQUES: <span id="current-blocks">0</span></span>
+                    <small id="best-score-label" style="color: #ffc107;">BEST: 0</small>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="game-over-modal" class="modal-overlay hidden" aria-live="polite" aria-modal="true" role="dialog">
+        <div class="modal-card">
+            <h2>GAME OVER</h2>
+            <div class="modal-subtitle">Tu torre se derrumbó</div>
+
+            <div class="score-display">
+                <span class="score-label">PUNTAJE</span>
+                <span id="final-score" class="score-number">0</span>
+                <span class="blocks-label">puntos</span>
+            </div>
+
+            <div class="blocks-display">
+                <span class="score-label">BLOQUES</span>
+                <span id="final-blocks" class="blocks-number">0</span>
+                <span class="blocks-label">acumulados</span>
+            </div>
+
+            <div id="record-form" class="record-form hidden">
+                <span class="record-form-title">¡NUEVO RECORD!</span>
+                <label for="player-id">Escribe tu ID o gamertag</label>
+                <input id="player-id" type="text" maxlength="18" autocomplete="nickname" placeholder="Tu gamertag">
+                <button id="save-record-button" class="btn-primary" type="button">Guardar record</button>
+            </div>
+
+            <button id="retry-button" class="btn-primary" type="button">Volver a intentar</button>
+        </div>
+    </div>
+
+    <script src="assets/js/game.js"></script>
+</body>
+</html>
