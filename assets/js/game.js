@@ -24,6 +24,9 @@ const saveRecordButton = document.getElementById('save-record-button');
 const BEST_SCORE_STORAGE_KEY = 'tower_drop_best_v2';
 const BEST_PLAYER_STORAGE_KEY = 'tower_drop_best_player_v2';
 const BEST_BLOCKS_STORAGE_KEY = 'tower_drop_best_blocks_v2';
+const isLowPowerDevice = window.matchMedia('(max-width: 600px), (pointer: coarse)').matches || navigator.hardwareConcurrency <= 4;
+const renderInterval = isLowPowerDevice ? 1000 / 30 : 1000 / 60;
+let lastRenderTime = 0;
 
 const CUBE_SIZE = 42; 
 const CRANE_Y = 85; 
@@ -781,7 +784,8 @@ function updateAndDrawFlyingEntities() {
 // ------------------------------------------
 
 function createFeatherParticles(x, y) {
-    for (let i = 0; i < 12; i++) {
+    const particleCount = isLowPowerDevice ? 5 : 12;
+    for (let i = 0; i < particleCount; i++) {
         particles.push({
             x: x, y: y,
             vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.5) * 5,
@@ -791,7 +795,8 @@ function createFeatherParticles(x, y) {
 }
 
 function createPerfectParticles(x, y) {
-    for (let i = 0; i < 16; i++) {
+    const particleCount = isLowPowerDevice ? 7 : 16;
+    for (let i = 0; i < particleCount; i++) {
         particles.push({
             x: x + CUBE_SIZE / 2, y: y + CUBE_SIZE,
             vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6,
@@ -801,6 +806,11 @@ function createPerfectParticles(x, y) {
 }
 
 function updateAndDrawParticles() {
+    const maxParticles = isLowPowerDevice ? 24 : 60;
+    if (particles.length > maxParticles) {
+        particles.splice(0, particles.length - maxParticles);
+    }
+
     for (let i = particles.length - 1; i >= 0; i--) {
         let p = particles[i];
         ctx.fillStyle = p.color;
@@ -1093,7 +1103,7 @@ function drawStyledBlock(x, y, colorObj, isClock = false, isGlowing = false) {
         ctx.fillRect(x + CUBE_SIZE - 7, y + CUBE_SIZE - 7, 3, 3);
 
     } else {
-        if (isGlowing) {
+        if (isGlowing && !isLowPowerDevice) {
             ctx.shadowColor = colorObj.fill;
             ctx.shadowBlur = 10;
         }
@@ -1321,9 +1331,12 @@ function drawGame() {
     drawHUD(); // HUD estático en primer plano
 }
 
-function gameLoop() {
+function gameLoop(timestamp) {
     updateLogic();
-    drawGame();
+    if (timestamp - lastRenderTime >= renderInterval) {
+        drawGame();
+        lastRenderTime = timestamp;
+    }
     requestAnimationFrame(gameLoop);
 }
 
@@ -1378,4 +1391,4 @@ if (saveRecordButton) {
 
 // Inicializar Juego
 initBase();
-gameLoop();
+gameLoop(performance.now());
